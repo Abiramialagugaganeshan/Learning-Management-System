@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Courses{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">Courses</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <ul class="course-list">
+            {% for course in courses %}
+                <li>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h5>{{ course.title }} - {{ course.description }}</h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if course.id in enrolled_course_ids %}
+                                        <span class="badge bg-success">Enrolled</span>
+                                    {% else %}
+                                        <a href="{% url 'lms:enroll' course.id %}" class="btn btn-sm btn-primary">Enroll</a>
+                                    {% endif %}
+                                    {% if is_instructor %}
+                                        <a href="{% url 'lms:lesson_create' course.id %}" class="btn btn-sm btn-secondary">Add Lesson</a>
+                                        <a href="{% url 'lms:quiz_create' course.id %}" class="btn btn-sm btn-secondary">Add Quiz</a>
+                                        <a href="{% url 'lms:assignment_create' course.id %}" class="btn btn-sm btn-secondary">Add Assignment</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if course.id in enrolled_course_ids and not is_instructor %}
+                                <h6>Lessons:</h6>
+                                <ul>
+                                    {% for lesson in course.lesson_set.all %}
+                                        <li>
+                                            <a href="{% url 'lms:lesson_detail' course.id lesson.id %}" class="btn btn-sm btn-info">{{ lesson.title }}</a>
+                                        </li>
+                                    {% empty %}
+                                        <li>No lessons available.</li>
+                                    {% endfor %}
+                                </ul>
+                                <h6>Quizzes:</h6>
+                                <ul>
+                                    {% for quiz in course.quiz_set.all %}
+                                        <li>
+                                            <a href="{% url 'lms:quiz_take' course.id quiz.id %}" class="btn btn-sm btn-info">{{ quiz.title }}</a>
+                                        </li>
+                                    {% empty %}
+                                        <li>No quizzes available.</li>
+                                    {% endfor %}
+                                </ul>
+                                <h6>Assignments:</h6>
+                                <ul>
+                                    {% for assignment in course.assignment_set.all %}
+                                        <li>
+                                            <a href="{% url 'lms:assignment_submit' course.id assignment.id %}" class="btn btn-sm btn-info">{{ assignment.title }}</a>
+                                        </li>
+                                    {% empty %}
+                                        <li>No assignments available.</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+            {% empty %}
+                <li>No courses available.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

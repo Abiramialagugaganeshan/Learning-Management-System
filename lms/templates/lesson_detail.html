@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+  {% block title %}Lesson: {{ lesson.title }}{% endblock %}
+
+  {% block content %}
+  <div class="row">
+      <div class="col-12">
+          <h2>{{ lesson.title }}</h2>
+          {% if messages %}
+              {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+              {% endfor %}
+          {% endif %}
+          <div class="ratio ratio-16x9">
+              <iframe src="{{ embed_url }}" allowfullscreen></iframe>
+          </div>
+      </div>
+  </div>
+  {% endblock %}

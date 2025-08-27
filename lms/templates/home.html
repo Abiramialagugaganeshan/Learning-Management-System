@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+  {% block title %}Home{% endblock %}
+
+  {% block content %}
+  <div class="row">
+      <div class="col-12 text-center">
+          <h1>Welcome to Docebo</h1>
+          <p>A simple learning management system built with Django.</p>
+          {% if user.is_authenticated %}
+              <a href="{% url 'lms:dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+          {% else %}
+              <a href="{% url 'lms:user_login' %}" class="btn btn-primary">Login</a>
+              <a href="{% url 'lms:register' %}" class="btn btn-secondary">Register</a>
+          {% endif %}
+      </div>
+  </div>
+  {% endblock %}

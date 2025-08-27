@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+  {% block title %}Create Quiz{% endblock %}
+
+  {% block content %}
+  <div class="row">
+      <div class="col-md-8 offset-md-2">
+          <h2>Create a New Quiz for {{ course.title }}</h2>
+          {% if messages %}
+              {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+              {% endfor %}
+          {% endif %}
+          <form method="post">
+              {% csrf_token %}
+              <div class="mb-3">
+                  <label for="title" class="form-label">Quiz Title</label>
+                  <input type="text" class="form-control" id="title" name="title" required>
+              </div>
+              <div class="mb-3">
+                  <label for="question_count" class="form-label">Number of Questions</label>
+                  <input type="number" class="form-control" id="question_count" name="question_count" min="1" value="1" required>
+              </div>
+              <div id="questions">
+                  <!-- JavaScript will dynamically add question fields -->
+              </div>
+              <button type="submit" class="btn btn-primary">Create Quiz</button>
+          </form>
+      </div>
+  </div>
+
+  <script>
+      document.getElementById('question_count').addEventListener('change', function() {
+          const count = parseInt(this.value);
+          const questionsDiv = document.getElementById('questions');
+          questionsDiv.innerHTML = '';
+
+          for (let i = 1; i <= count; i++) {
+              const questionHtml = `
+                  <div class="card mb-3">
+                      <div class="card-body">
+                          <h5>Question ${i}</h5>
+                          <div class="mb-3">
+                              <label for="question_text_${i}" class="form-label">Question Text</label>
+                              <input type="text" class="form-control" id="question_text_${i}" name="question_text_${i}" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="option1_${i}" class="form-label">Option 1</label>
+                              <input type="text" class="form-control" id="option1_${i}" name="option1_${i}" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="option2_${i}" class="form-label">Option 2</label>
+                              <input type="text" class="form-control" id="option2_${i}" name="option2_${i}" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="option3_${i}" class="form-label">Option 3</label>
+                              <input type="text" class="form-control" id="option3_${i}" name="option3_${i}" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="option4_${i}" class="form-label">Option 4</label>
+                              <input type="text" class="form-control" id="option4_${i}" name="option4_${i}" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="correct_option_${i}" class="form-label">Correct Option</label>
+                              <select class="form-select" id="correct_option_${i}" name="correct_option_${i}" required>
+                                  <option value="1">Option 1</option>
+                                  <option value="2">Option 2</option>
+                                  <option value="3">Option 3</option>
+                                  <option value="4">Option 4</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+              `;
+              questionsDiv.insertAdjacentHTML('beforeend', questionHtml);
+          }
+      });
+
+      // Trigger change event on page load to initialize with 1 question
+      document.getElementById('question_count').dispatchEvent(new Event('change'));
+  </script>
+  {% endblock %}

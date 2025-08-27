@@ -1,0 +1,17 @@
+body {
+    background-color: #f8f9fa;
+}
+.alert {
+    margin: 10px 0;
+}
+.course-list, .enrollment-list, .certificate-list {
+    list-style-type: none;
+    padding: 0;
+}
+.course-list li, .enrollment-list li, .certificate-list li {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}

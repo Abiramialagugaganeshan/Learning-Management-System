@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}Certificate{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl mb-4">Certificate</h2>
+<p>Your certificate is being downloaded. If not, <a href="{% url 'lms:certificate_view' certificate.id %}" class="text-blue-600">click here</a>.</p>
+<a href="{% url 'lms:dashboard' %}" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded inline-block">Back to Dashboard</a>
+{% endblock %}

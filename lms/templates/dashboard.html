@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">Dashboard</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if is_instructor %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Your Courses</h3>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'lms:course_create' %}" class="btn btn-primary mb-3">Create New Course</a>
+                    <ul class="course-list">
+                        {% for course in courses %}
+                            <li>{{ course.title }} - {{ course.description }}</li>
+                        {% empty %}
+                            <li>No courses available.</li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{% url 'lms:instructor_dashboard' %}" class="btn btn-secondary">View Instructor Dashboard</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>All Courses</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="course-list">
+                        {% for course in courses %}
+                            <li>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>{{ course.title }} - {{ course.description }}</span>
+                                    {% if course.id in enrolled_course_ids %}
+                                        <span class="badge bg-success">Enrolled</span>
+                                    {% else %}
+                                        <a href="{% url 'lms:enroll' course.id %}" class="btn btn-sm btn-primary">Enroll</a>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li>No courses available.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Your Enrollments</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="enrollment-list">
+                        {% for detail in course_details %}
+                            <li>
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <h5>{{ detail.course.title }}</h5>
+                                        <p>{{ detail.course.description }}</p>
+                                        <h6>Lessons:</h6>
+                                        <ul>
+                                            {% for lesson in detail.lessons %}
+                                                <li>
+                                                    <a href="{% url 'lms:lesson_detail' detail.course.id lesson.id %}" class="btn btn-sm btn-info">{{ lesson.title }}</a>
+                                                </li>
+                                            {% empty %}
+                                                <li>No lessons available.</li>
+                                            {% endfor %}
+                                        </ul>
+                                        <h6>Quizzes:</h6>
+                                        <ul>
+                                            {% for quiz in detail.quizzes %}
+                                                <li>
+                                                    <a href="{% url 'lms:quiz_take' detail.course.id quiz.id %}" class="btn btn-sm btn-info">{{ quiz.title }}</a>
+                                                </li>
+                                            {% empty %}
+                                                <li>No quizzes available.</li>
+                                            {% endfor %}
+                                        </ul>
+                                        <h6>Assignments:</h6>
+                                        <ul>
+                                            {% for assignment in detail.assignments %}
+                                                <li>
+                                                    <a href="{% url 'lms:assignment_submit' detail.course.id assignment.id %}" class="btn btn-sm btn-info">{{ assignment.title }}</a>
+                                                </li>
+                                            {% empty %}
+                                                <li>No assignments available.</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li>No enrollments yet.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Your Certificates</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="certificate-list">
+                        {% for certificate in certificates %}
+                            <li>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>{{ certificate.course.title }}</span>
+                                    {% if certificate.is_completed %}
+                                        <a href="{% url 'lms:certificate_view' certificate.id %}" class="btn btn-sm btn-success">Download Certificate</a>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Not Completed</span>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li>No certificates earned yet.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

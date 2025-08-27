@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+  {% block title %}Create Assignment{% endblock %}
+
+  {% block content %}
+  <div class="row">
+      <div class="col-md-6 offset-md-3">
+          <h2>Create a New Assignment for {{ course.title }}</h2>
+          {% if messages %}
+              {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+              {% endfor %}
+          {% endif %}
+          <form method="post">
+              {% csrf_token %}
+              <div class="mb-3">
+                  <label for="title" class="form-label">Title</label>
+                  <input type="text" class="form-control" id="title" name="title" required>
+              </div>
+              <div class="mb-3">
+                  <label for="description" class="form-label">Description</label>
+                  <textarea class="form-control" id="description" name="description" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Create Assignment</button>
+          </form>
+      </div>
+  </div>
+  {% endblock %}

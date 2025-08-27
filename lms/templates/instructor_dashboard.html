@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+  {% block title %}Instructor Dashboard{% endblock %}
+
+  {% block content %}
+  <div class="row">
+      <div class="col-12">
+          <h2 class="mb-4">Instructor Dashboard</h2>
+
+          {% if messages %}
+              {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+              {% endfor %}
+          {% endif %}
+
+          {% for cp in course_progress %}
+              <div class="card mb-4">
+                  <div class="card-header">
+                      <h3>{{ cp.course.title }} ({{ cp.enrollment_count }} Students)</h3>
+                  </div>
+                  <div class="card-body">
+                      <h4>Student Progress</h4>
+                      {% for progress in cp.student_progress %}
+                          <div class="card mb-2">
+                              <div class="card-body">
+                                  <h5>{{ progress.student.username }}</h5>
+                                  <p>Lessons Viewed: {{ progress.lessons_viewed }} / {{ progress.total_lessons }}</p>
+                                  <p>Assignments Submitted: {{ progress.submitted_assignments }} / {{ progress.total_assignments }}</p>
+                                  <h6>Quiz Scores:</h6>
+                                  <ul>
+                                      {% for quiz in progress.quiz_scores %}
+                                          <li>{{ quiz.title }}: {{ quiz.score }}%</li>
+                                      {% empty %}
+                                          <li>No quizzes taken.</li>
+                                      {% endfor %}
+                                  </ul>
+                              </div>
+                          </div>
+                      {% empty %}
+                          <p>No students enrolled.</p>
+                      {% endfor %}
+                  </div>
+              </div>
+          {% empty %}
+              <p>No courses available.</p>
+          {% endfor %}
+      </div>
+  </div>
+  {% endblock %}
